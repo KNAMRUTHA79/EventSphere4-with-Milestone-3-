@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>EventSphere - Event Management Platform</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="nav-container">
+
+        <div class="nav-logo">
+            <i class="fas fa-calendar-check"></i>
+            <span>EventSphere</span>
+        </div>
+
+        <div class="nav-links">
+
+            <a href="#dashboard" class="active" data-tab="dashboard">
+                Dashboard
+            </a>
+
+            <a href="#register" data-tab="register">
+                Register
+            </a>
+
+            <a href="#attendees" data-tab="attendees">
+                Attendees
+            </a>
+
+            <a href="#checkin" data-tab="checkin">
+                Check-In
+            </a>
+
+            <a href="#vendors" data-tab="vendors">
+                Vendors
+            </a>
+
+            <a href="#finance" data-tab="finance">
+                Finance
+            </a>
+
+            <a href="#automation" data-tab="automation">
+                Automation
+            </a>
+
+            <a href="#analytics" data-tab="analytics">
+                Analytics
+            </a>
+
+            <a href="#resources" data-tab="resources">
+                Resources
+            </a>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<main class="container">
+
+
+<!-- ================= DASHBOARD ================= -->
+
+<section id="dashboard" class="tab-content active">
+
+    <div class="hero-section">
+
+        <h1>🎯 Welcome to EventSphere</h1>
+
+        <p>
+            Manage events, people, vendors, finances and analytics in one place.
+        </p>
+
+    </div>
+
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+            <b id="totalEvents">0</b>
+            <span>Total Events</span>
+        </div>
+
+        <div class="stat-card">
+            <b id="totalRegistrations">0</b>
+            <span>Registrations</span>
+        </div>
+
+        <div class="stat-card">
+            <b id="totalCheckedIn">0</b>
+            <span>Checked In</span>
+        </div>
+
+        <div class="stat-card">
+            <b id="totalVendors">0</b>
+            <span>Vendors</span>
+        </div>
+
+        <div class="stat-card">
+            <b id="dashBudget">₹0</b>
+            <span>Total Budget</span>
+        </div>
+
+        <div class="stat-card">
+            <b id="dashExpenses">₹0</b>
+            <span>Expenses</span>
+        </div>
+
+    </div>
+
+
+    <div class="panel">
+
+        <h2>Upcoming Events</h2>
+
+        <div id="eventsContainer" class="events-grid"></div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= REGISTRATION ================= -->
+
+<section id="register" class="tab-content">
+
+    <h2>Event Registration</h2>
+
+    <div class="panel">
+
+        <form id="registrationForm">
+
+            <div class="form-row">
+
+                <label>
+                    Event
+
+                    <select id="regEventId" required>
+                    </select>
+
+                </label>
+
+
+                <label>
+                    Full Name
+
+                    <input id="regName" required>
+
+                </label>
+
+            </div>
+
+
+            <div class="form-row">
+
+                <label>
+                    Email
+
+                    <input
+                        type="email"
+                        id="regEmail"
+                        required
+                    >
+
+                </label>
+
+
+                <label>
+                    Phone
+
+                    <input
+                        id="regPhone"
+                        pattern="[0-9]{10}"
+                        required
+                    >
+
+                </label>
+
+            </div>
+
+
+            <div class="form-row">
+
+                <label>
+                    College
+
+                    <input id="regCollege">
+
+                </label>
+
+
+                <label>
+                    Department
+
+                    <input id="regDepartment">
+
+                </label>
+
+            </div>
+
+
+            <button class="btn-primary">
+                Register & Get Ticket
+            </button>
+
+        </form>
+
+
+        <div
+            id="registrationResult"
+            class="result-box hidden">
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= ATTENDEES ================= -->
+
+<section id="attendees" class="tab-content">
+
+    <h2>Attendee Management</h2>
+
+
+    <div class="filter-section">
+
+        <select id="attendeeEventFilter"></select>
+
+        <button
+            class="btn-secondary"
+            onclick="loadAttendees()">
+            Load
+        </button>
+
+    </div>
+
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Ticket</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                    <th>QR</th>
+                </tr>
+
+            </thead>
+
+
+            <tbody id="attendeesBody"></tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= CHECK-IN ================= -->
+
+<section id="checkin" class="tab-content">
+
+    <h2>QR Code Check-In</h2>
+
+
+    <div class="panel">
+
+        <label>
+            Ticket ID
+
+            <input
+                id="checkinTicket"
+                placeholder="TKT..."
+                onkeydown="if(event.key==='Enter')checkIn()"
+            >
+
+        </label>
+
+
+        <button
+            class="btn-success"
+            onclick="checkIn()">
+
+            Check In
+
+        </button>
+
+
+        <div
+            id="checkinResult"
+            class="result-box hidden">
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= VENDORS ================= -->
+
+<section id="vendors" class="tab-content">
+
+    <h2>Vendor Management</h2>
+
+
+    <div class="subtabs">
+
+        <button
+            class="subtab active"
+            data-sub="vendorAdd">
+
+            Add Vendor
+
+        </button>
+
+
+        <button
+            class="subtab"
+            data-sub="vendorList">
+
+            Vendor List
+
+        </button>
+
+
+        <button
+            class="subtab"
+            data-sub="vendorAssign">
+
+            Assign
+
+        </button>
+
+
+        <button
+            class="subtab"
+            data-sub="vendorAssignments">
+
+            Assignments
+
+        </button>
+
+    </div>
+
+
+
+    <!-- ADD VENDOR -->
+
+    <div
+        id="vendorAdd"
+        class="subcontent active panel">
+
+        <form id="vendorForm">
+
+            <div class="form-row">
+
+                <label>
+                    Vendor Name
+
+                    <input
+                        id="vendorName"
+                        required>
+
+                </label>
+
+
+                <label>
+                    Service
+
+                    <select
+                        id="vendorService"
+                        required>
+
+                        <option value="Catering">
+                            Catering
+                        </option>
+
+                        <option value="Photography">
+                            Photography
+                        </option>
+
+                        <option value="Decoration">
+                            Decoration
+                        </option>
+
+                        <option value="Sound System">
+                            Sound System
+                        </option>
+
+                        <option value="Transport">
+                            Transport
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+                </label>
+
+            </div>
+
+
+            <div class="form-row">
+
+                <label>
+                    Contact
+
+                    <input id="vendorPhone">
+
+                </label>
+
+
+                <label>
+                    Email
+
+                    <input
+                        type="email"
+                        id="vendorEmail">
+
+                </label>
+
+            </div>
+
+
+            <label>
+                Availability
+
+                <input id="vendorAvailability">
+
+            </label>
+
+
+            <button class="btn-primary">
+                Add Vendor
+            </button>
+
+        </form>
+
+
+        <div
+            id="vendorResult"
+            class="result-box hidden">
+        </div>
+
+    </div>
+
+
+
+    <!-- VENDOR LIST -->
+
+    <div
+        id="vendorList"
+        class="subcontent panel">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Service</th>
+                    <th>Contact</th>
+                    <th>Rating</th>
+                </tr>
+
+            </thead>
+
+
+            <tbody id="vendorsBody"></tbody>
+
+        </table>
+
+
+        <div class="inline-form">
+
+            <input
+                id="rateVendorId"
+                placeholder="Vendor ID">
+
+
+            <select id="rateValue">
+
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+
+                <option selected>
+                    5
+                </option>
+
+            </select>
+
+
+            <button
+                class="btn-secondary"
+                onclick="rateVendor()">
+
+                Rate
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ASSIGN VENDOR -->
+
+    <div
+        id="vendorAssign"
+        class="subcontent panel">
+
+        <form id="assignForm">
+
+            <label>
+                Event
+
+                <select
+                    id="assignEventId"
+                    required>
+                </select>
+
+            </label>
+
+
+            <label>
+                Vendor
+
+                <select
+                    id="assignVendorId"
+                    required>
+                </select>
+
+            </label>
+
+
+            <label>
+                Service Description
+
+                <input id="assignService">
+
+            </label>
+
+
+            <button class="btn-primary">
+                Assign Vendor
+            </button>
+
+        </form>
+
+
+        <div
+            id="assignResult"
+            class="result-box hidden">
+        </div>
+
+    </div>
+
+
+
+    <!-- ASSIGNMENTS -->
+
+    <div
+        id="vendorAssignments"
+        class="subcontent panel">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Event</th>
+                    <th>Vendor</th>
+                    <th>Service</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+
+            </thead>
+
+
+            <tbody id="assignmentsBody"></tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= FINANCE ================= -->
+
+<section id="finance" class="tab-content">
+
+    <h2>
+        Milestone 3 — Budget & Sponsorship
+    </h2>
+
+
+    <div class="panel">
+
+
+        <div class="filter-section">
+
+            <select id="financeEvent"></select>
+
+            <button
+                class="btn-secondary"
+                onclick="loadFinance()">
+
+                Load
+
+            </button>
+
+        </div>
+
+
+        <div class="stats-grid mini">
+
+            <div class="stat-card">
+
+                <b id="budgetTotal">
+                    ₹0
+                </b>
+
+                <span>Budget</span>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <b id="expenseTotal">
+                    ₹0
+                </b>
+
+                <span>Expenses</span>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <b id="sponsorTotal">
+                    ₹0
+                </b>
+
+                <span>Sponsorship</span>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <b id="remainingTotal">
+                    ₹0
+                </b>
+
+                <span>Remaining</span>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <b id="utilization">
+                    0%
+                </b>
+
+                <span>Utilization</span>
+
+            </div>
+
+        </div>
+
+
+
+        <h3>Set Budget</h3>
+
+
+        <div class="inline-form">
+
+            <input
+                id="budgetAmount"
+                type="number"
+                min="0"
+                placeholder="Amount">
+
+
+            <button
+                class="btn-primary"
+                onclick="saveBudget()">
+
+                Save Budget
+
+            </button>
+
+        </div>
+
+
+
+        <h3>Add Expense</h3>
+
+
+        <div class="inline-form">
+
+            <select id="expenseCategory">
+
+                <option>Venue</option>
+                <option>Catering</option>
+                <option>Staffing</option>
+                <option>Marketing</option>
+                <option>Logistics</option>
+                <option>Equipment</option>
+
+            </select>
+
+
+            <input
+                id="expenseDescription"
+                placeholder="Description">
+
+
+            <input
+                id="expenseAmount"
+                type="number"
+                min="1"
+                placeholder="Amount">
+
+
+            <select id="expenseApproval">
+
+                <option value="Approved">
+                    Approved
+                </option>
+
+                <option value="Pending">
+                    Pending Approval
+                </option>
+
+            </select>
+
+
+            <button
+                class="btn-primary"
+                onclick="addExpense()">
+
+                Add Expense
+
+            </button>
+
+        </div>
+
+
+
+        <h3>Add Sponsorship</h3>
+
+
+        <div class="inline-form">
+
+            <input
+                id="sponsorName"
+                placeholder="Sponsor name">
+
+
+            <input
+                id="sponsorAmount"
+                type="number"
+                min="1"
+                placeholder="Amount">
+
+
+            <button
+                class="btn-primary"
+                onclick="addSponsor()">
+
+                Add Sponsor
+
+            </button>
+
+        </div>
+
+
+        <div
+            id="financeMessage"
+            class="result-box hidden">
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= AUTOMATION ================= -->
+
+<section id="automation" class="tab-content">
+
+    <h2>
+        Milestone 3 — Automation
+    </h2>
+
+
+    <div class="panel">
+
+
+        <div class="grid2">
+
+
+            <div>
+
+                <h3>
+                    Schedule Reminder
+                </h3>
+
+
+                <select id="reminderEvent"></select>
+
+
+                <input
+                    id="reminderDate"
+                    type="date">
+
+
+                <input
+                    id="reminderMessage"
+                    placeholder="Reminder message">
+
+
+                <button
+                    class="btn-primary"
+                    onclick="scheduleReminder()">
+
+                    Schedule
+
+                </button>
+
+            </div>
+
+
+
+            <div>
+
+                <h3>
+                    Run Automation
+                </h3>
+
+
+                <p>
+                    The automation cycle creates reminders
+                    and notifications for upcoming events.
+                </p>
+
+
+                <button
+                    class="btn-primary"
+                    onclick="runAutomation()">
+
+                    Run Automation Now
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <h3>
+            Approval Workflow
+        </h3>
+
+
+        <div class="filter-section">
+
+            <button
+                class="btn-secondary"
+                onclick="loadApprovals()">
+
+                Refresh Approvals
+
+            </button>
+
+        </div>
+
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Event</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+
+            </thead>
+
+
+            <tbody id="approvalsBody"></tbody>
+
+        </table>
+
+
+
+        <h3>
+            Recent Notifications
+        </h3>
+
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Type</th>
+                    <th>Recipient</th>
+                    <th>Message</th>
+                    <th>Date</th>
+                </tr>
+
+            </thead>
+
+
+            <tbody id="notificationsBody"></tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= ANALYTICS ================= -->
+
+<section id="analytics" class="tab-content">
+
+    <h2>
+        Milestone 4 — Analytics & Reports
+    </h2>
+
+
+    <div class="panel">
+
+
+        <div class="filter-section">
+
+            <select id="analyticsEvent"></select>
+
+
+            <button
+                class="btn-secondary"
+                onclick="loadAnalytics()">
+
+                Analyze
+
+            </button>
+
+        </div>
+
+
+
+        <div class="kpi-grid">
+
+
+            <div>
+
+                <span>
+                    Registrations
+                </span>
+
+                <b id="kpiRegs">
+                    0
+                </b>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Attendance Rate
+                </span>
+
+                <b id="kpiAttendance">
+                    0%
+                </b>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Budget Utilization
+                </span>
+
+                <b id="kpiBudget">
+                    0%
+                </b>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Sponsorship
+                </span>
+
+                <b id="kpiSponsor">
+                    ₹0
+                </b>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="chart-card">
+
+            <h3>
+                Event Attendance Comparison
+            </h3>
+
+            <div id="comparisonChart"></div>
+
+        </div>
+
+
+
+        <div class="chart-card">
+
+            <h3>
+                Operational Forecast
+            </h3>
+
+            <div id="forecastResult"></div>
+
+        </div>
+
+
+
+        <div class="inline-form">
+
+            <button
+                class="btn-primary"
+                onclick="downloadCSV()">
+
+                Download Attendee CSV
+
+            </button>
+
+
+            <button
+                class="btn-secondary"
+                onclick="downloadPDF()">
+
+                Download Event PDF
+
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= RESOURCES ================= -->
+
+<section id="resources" class="tab-content">
+
+    <h2>
+        Milestone 4 — Resource Optimization
+    </h2>
+
+
+    <div class="panel">
+
+
+        <div class="inline-form">
+
+            <input
+                id="resourceName"
+                placeholder="Resource name">
+
+
+            <input
+                id="resourceCategory"
+                placeholder="Category">
+
+
+            <input
+                id="resourceQty"
+                type="number"
+                min="1"
+                placeholder="Quantity">
+
+
+            <button
+                class="btn-primary"
+                onclick="addResource()">
+
+                Add Resource
+
+            </button>
+
+        </div>
+
+
+
+        <div class="inline-form">
+
+            <select id="resourceSelect"></select>
+
+
+            <select id="resourceEvent"></select>
+
+
+            <input
+                id="allocationQty"
+                type="number"
+                min="1"
+                placeholder="Quantity">
+
+
+            <button
+                class="btn-primary"
+                onclick="allocateResource()">
+
+                Allocate
+
+            </button>
+
+        </div>
+
+
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Resource</th>
+                    <th>Category</th>
+                    <th>Total</th>
+                    <th>Available</th>
+                    <th>Utilization</th>
+                </tr>
+
+            </thead>
+
+
+            <tbody id="resourcesBody"></tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+</main>
+
+
+
+<footer>
+
+    EventSphere – Advanced Event Management System |
+    Milestones 1–4
+
+</footer>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
